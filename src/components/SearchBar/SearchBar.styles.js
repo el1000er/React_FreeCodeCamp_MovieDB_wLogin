@@ -26,7 +26,7 @@ img{
     width:30px;
 }
 input{
-    font-size:28px;
+    font-size:var(--fontBig);
     position:absolute;
     left:0px;
     margin:8px 0;
