@@ -15,6 +15,7 @@ export const useHomeFetch=()=>{
     const [state, setState] = useState(initialState);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
+    const [isLoadingMore,setIsLoadingMore]= useState(false);
 
      
   
@@ -50,10 +51,19 @@ export const useHomeFetch=()=>{
       fetchMovies(1,searchTerm);
     }, [searchTerm]);
 
+
+    //Load More
+    useEffect(()=>{
+      if(!isLoadingMore)return;
+
+      //if Load More button is clicked we show one more page and search term if we are looking for something
+      fetchMovies(state.page + 1, searchTerm);
+      setIsLoadingMore(false);
+    },[isLoadingMore,searchTerm,state.page])
+
     
     //EC6 simplify, this object will have state:state,loading:loading,error:error
-    console.log(state);
-    return{state,loading,error,searchTerm,setSearchTerm};
+    return{state,loading,error,searchTerm,setSearchTerm,setIsLoadingMore};
 };
 
   

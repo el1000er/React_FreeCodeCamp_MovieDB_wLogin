@@ -18,9 +18,12 @@ import NoImage from "../images/no_image.jpg";
 import { Fragment } from "react/cjs/react.production.min";
 
 const Home = () => {
-  const { state, loading, error, searchTerm, setSearchTerm } = useHomeFetch();
+  const { state, loading, error, searchTerm, setSearchTerm, setIsLoadingMore } =
+    useHomeFetch();
 
-  // console.log('Peliculas' +state.results);
+  console.log('Peliculas' +state.results);
+
+  if(error) return<div>Something went wrong...</div>;
 
   return (
     <>
@@ -43,7 +46,7 @@ const Home = () => {
       ) : null}
       <SearchBar setSearchTerm={setSearchTerm} />
 
-      <Grid header={searchTerm?'Search Result':'Popular Movies'}>
+      <Grid header={searchTerm ? "Search Result" : "Popular Movies"}>
         {state.results.map((movie) => (
           <Thumb
             key={movie.id}
@@ -59,7 +62,7 @@ const Home = () => {
       </Grid>
       {loading && <Spinner />}
       {state.page < state.total_pages && !loading && (
-        <Button text='Load More'></Button>
+        <Button text="Load More" callback={()=>setIsLoadingMore(true)}></Button>
       )}
     </>
   );
