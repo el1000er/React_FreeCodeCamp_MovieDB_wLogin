@@ -1,50 +1,68 @@
-import React, { useState, useEffect } from "react";
-//Api
-import API from "../API";
+import React from "react";
 //Config
-import { POSTER_SIZE, BACKDROP_SIZE, IMPAGE_BASE_URL } from "../config";
+import { POSTER_SIZE, BACKDROP_SIZE, IMAGE_BASE_URL } from "../config";
+
 //Components
+import HeroImage from "./HeroImage";
+import Grid from "./Grid";
+import Thumb from "./Thumb";
+import Spinner from "./Spinner";
+import SearchBar from "./SearchBar";
+import Button from "./Button";
 
 //Hook
+import { useHomeFetch } from "../hooks/useHomeFetch";
 
 //Image
 import NoImage from "../images/no_image.jpg";
+import { Fragment } from "react/cjs/react.production.min";
 
 const Home = () => {
-  const [state, setState] = useState();
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
+  const { state, loading, error, searchTerm, setSearchTerm } = useHomeFetch();
 
-  const fetchMovies = async (page, searchTerm = "") => {
-    try {
-      setError(false);
-      setLoading(true);
+  // console.log('Peliculas' +state.results);
 
-      const movies = await API.fetchMovies(searchTerm, page);
-     
+  return (
+    <>
+      {/* {state.results[0] && (
+        < HeroImage
+          image={`${IMAGE_BASE_URL}${BACKDROP_SIZE}${state.results[0].backdrop_path}`}
+          title={state.results[0].original_title}
+          text={state.results[0].overview}
+        />
+      )} */}
 
-      //here we are using spread operator, that  we will use to create a NEW OBJECT
-      //with all the fetched movies, NOT CHANGING the state (state = movies) which is not recommended
-      setState((prev) => ({
-        ...movies,
-        results:
-          page > 1 ? [...prev.results, ...movies.results] : [...movies.results],
-      }));
-    } catch (error) {
-      setError(true);
-    }
-    setLoading(false);
-  };
+      {/* or */}
 
-  //initial render
-  //as this array is empty, this will be trigger once onMount
-  useEffect(() => {
-    fetchMovies(1);
-  }, []);
+      {!searchTerm && state.results[0] ? (
+        <HeroImage
+          image={`${IMAGE_BASE_URL}${BACKDROP_SIZE}${state.results[0].backdrop_path}`}
+          title={state.results[0].original_title}
+          text={state.results[0].overview}
+        />
+      ) : null}
+      <SearchBar setSearchTerm={setSearchTerm} />
 
-  console.log(state);
-
-  return <div>Home Page</div>;
+      <Grid header={searchTerm?'Search Result':'Popular Movies'}>
+        {state.results.map((movie) => (
+          <Thumb
+            key={movie.id}
+            clickable
+            image={
+              movie.poster_path
+                ? IMAGE_BASE_URL + POSTER_SIZE + movie.poster_path
+                : NoImage
+            }
+            movieId={movie.id}
+          />
+        ))}
+      </Grid>
+      {loading && <Spinner />}
+      {/* {state.page<state.total_pages && !loading && (
+        <Button text='Load More'/>
+      )} */}
+    </>
+  );
 };
 
 export default Home;
