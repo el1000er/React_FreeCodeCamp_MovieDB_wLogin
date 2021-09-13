@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from 'prop-types';
 //Components
 import Thumb from "../Thumb";
 //Config
@@ -6,7 +7,7 @@ import { IMAGE_BASE_URL, POSTER_SIZE } from "../../config";
 //Image
 import NoImage from "../../images/no_image.jpg";
 //styles
-import { Wrapper, Conent, Text, Content } from "./MovieInfo.styles";
+import { Wrapper, Text, Content } from "./MovieInfo.styles";
 
 //Implicit Return
 const MovieInfo = ({ movie }) => (
@@ -41,4 +42,9 @@ const MovieInfo = ({ movie }) => (
     </Content>
   </Wrapper>
 );
+
+MovieInfo.propTypes={
+    //this object can be shaped to the shape of the desired object and every property
+movie:PropTypes.object
+}
 export default MovieInfo;
