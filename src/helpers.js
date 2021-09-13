@@ -14,7 +14,7 @@ export const convertMoney = money => {
   return formatter.format(money);
 };
 
-export const isPersistedState=stateName=>{
+export const isPersistedState= stateName =>{
   const sessionState= sessionStorage.getItem(stateName);
 
   // && the author of the tutorial name this action of && as short circuit
